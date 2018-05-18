@@ -14,7 +14,7 @@ socket.on( 'newMessage', function( message )
 {
 	// console.log( 'New message', message );
 	// document.querySelector( 'p' ).textContent = message.text;
-	document.getElementById( 'createdAt' ).textContent = message.createdAt.toString();
+	document.getElementById( 'createdAt' ).textContent = message.createdAt;
 	document.getElementById( 'from' ).textContent = message.from;
 	document.getElementById( 'to' ).textContent = message.to;
 	document.getElementById( 'message' ).textContent = message.text;
