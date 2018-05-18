@@ -12,10 +12,47 @@ socket.on( 'disconnect', function()
 
 socket.on( 'newMessage', function( message )
 {
-	// console.log( 'New message', message );
-	// document.querySelector( 'p' ).textContent = message.text;
-	document.getElementById( 'createdAt' ).textContent = message.createdAt;
-	document.getElementById( 'from' ).textContent = message.from;
-	document.getElementById( 'to' ).textContent = message.to;
-	document.getElementById( 'message' ).textContent = message.text;
+	// var li = jQuery( '<li></li>' );
+	var li = `<li>${ message.from }: ${ message.text }</li>`;
+	// li.text( `${ message.from }: ${ message.text }` );
+
+	// jQuery( '#messages' ).append( li );
+	document.getElementById( 'messages' ).innerHTML += li;
 });
+/**
+socket.emit( 'createMessage',
+{
+	from: 'Frank',
+	text: 'Hi'
+}, function( data )
+{
+	console.log( 'Got it!', data );
+});
+*/
+document.getElementById( 'message-form' ).addEventListener( 'submit', function( e )
+{
+	e.preventDefault();
+
+	socket.emit( 'createMessage',
+	{
+		from: 'User',
+		text: document.getElementsByName( 'message' )[ 0 ].value
+	}, function()
+	{
+		document.getElementsByName( 'message' )[ 0 ].value = '';
+	});
+});
+
+// jQuery( '#message-form' ).on( 'submit', function( e )
+// {
+// 	e.preventDefault();
+
+// 	socket.emit( 'createMessage',
+// 	{
+// 		from: 'User',
+// 		text: jQuery( '[name=message]' ).val()
+// 	}, function()
+// 	{
+
+// 	});
+// });
