@@ -14,6 +14,21 @@ app.use( express.static( publicPath ) );
 io.on( 'connection', ( socket ) =>
 {
 	console.log( 'New user connected' );
+	/**
+	socket.emit( 'newMessage',
+	{
+		from: 'popoy@example.com',
+		text: 'Hey, what is going on?',
+		createdAt: new Date().toString()
+	});
+	*/
+	socket.on( 'createMessage', ( message ) =>
+	{
+		// console.log( 'createMessage', newMessage );
+		message.createdAt = new Date().toString();
+
+		socket.emit( 'newMessage', message );
+	});
 
 	socket.on( 'disconnect', () =>
 	{
