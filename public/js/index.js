@@ -13,23 +13,29 @@ socket.on( 'disconnect', function()
 socket.on( 'newMessage', function( message )
 {
 	// var li = jQuery( '<li></li>' );
-	var li = `<li>${ message.from }: ${ message.text }</li>`;
+	var li = document.createElement( 'li' );
 	// li.text( `${ message.from }: ${ message.text }` );
+	li.innerHTML = `${ message.from }: ${ message.text }`;
 
 	// jQuery( '#messages' ).append( li );
-	document.getElementById( 'messages' ).innerHTML += li;
+	document.getElementById( 'messages' ).appendChild( li );
 });
 
 socket.on( 'newLocationMessage', function( message )
 {
-	var li = jQuery( '<li></li>' );
-	var a = jQuery( '<a target="_blank">My current location</a>');
+	// var li = jQuery( '<li></li>' );
+	var li = document.createElement( 'li' );
+	// var a = jQuery( '<a target="_blank">My current location</a>');
+	var a = document.createElement( 'a' );
+	a.innerHTML = 'My current location';
+	a.target = '_blank';
 
-	li.text( `${ message.from }: ` );
-	a.attr( 'href', message.url );
+	// li.text( `${ message.from }: ` );
+	li.innerHTML = `${ message.from }: `;
+	// a.attr( 'href', message.url );
+	a.href = message.url;
 	li.append( a );
-
-	jQuery( '#messages' ).append( li );
+	document.getElementById( 'messages' ).appendChild( li );
 });
 
 /**
@@ -42,6 +48,8 @@ socket.emit( 'createMessage',
 	console.log( 'Got it!', data );
 });
 */
+var messageInput = document.getElementsByName( 'message' )[ 0 ];
+
 document.getElementById( 'message-form' ).addEventListener( 'submit', function( e )
 {
 	e.preventDefault();
@@ -49,10 +57,10 @@ document.getElementById( 'message-form' ).addEventListener( 'submit', function( 
 	socket.emit( 'createMessage',
 	{
 		from: 'User',
-		text: document.getElementsByName( 'message' )[ 0 ].value
+		text: messageInput.value
 	}, function()
 	{
-		document.getElementsByName( 'message' )[ 0 ].value = '';
+		messageInput.value = '';
 	});
 });
 
@@ -71,12 +79,15 @@ document.getElementById( 'message-form' ).addEventListener( 'submit', function( 
 // });
 
 var locationButton = document.getElementById( 'send-location' );
+
 locationButton.addEventListener( 'click', function()
 {
 	if ( ! navigator.geolocation )
 	{
 		return alert( 'Geolocation not supported by your browser.' );
 	}
+	locationButton.disabled = 'true';
+	locationButton.innerHTML = 'Sending location...';
 
 	navigator.geolocation.getCurrentPosition( function( position )
 	{
@@ -89,4 +100,8 @@ locationButton.addEventListener( 'click', function()
 	{
 		alert( 'Unable to fetch location' );
 	});
+
+	messageInput.focus();
+	locationButton.removeAttribute( 'disabled' );
+	locationButton.innerHTML = 'Send location';
 });
