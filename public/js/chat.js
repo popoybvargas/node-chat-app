@@ -3,18 +3,28 @@ var socket = io();
 function scrollToBottom()
 {
 	// selectors
-	var messages = jQuery( '#messages' );
-	var newMessage = messages.children( 'li:last-child' );
+	// var messages = jQuery( '#messages' );
+	var messages = document.getElementById( 'messages' );
+	// var newMessage = messages.children( 'li:last-child' );
+	var newMessage = messages.lastElementChild;
 	// heights
-	var clientHeight = messages.prop( 'clientHeight' );
-	var scrollTop = messages.prop( 'scrollTop' );
-	var scrollHeight = messages.prop( 'scrollHeight' );
-	var newMessageHeight = newMessage.innerHeight();
-	var lastMessageHeight = newMessage.prev().innerHeight();
+	// var clientHeight = messages.prop( 'clientHeight' );
+	var clientHeight = messages.clientHeight;
+	// var scrollTop = messages.prop( 'scrollTop' );
+	var scrollTop = messages.scrollTop;
+	// var scrollHeight = messages.prop( 'scrollHeight' );
+	var scrollHeight = messages.scrollHeight;
+	// var newMessageHeight = newMessage.innerHeight();
+	var newMessageHeight = window.getComputedStyle( newMessage, null ).getPropertyValue( 'height' );
+	// var lastMessageHeight = newMessage.prev().innerHeight();
+	var lastMessage = messages.lastChild.previousElementSibling;
+	var lastMessageHeight = window.getComputedStyle( lastMessage, null ).getPropertyValue( 'height' );
 
-	if ( clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight )
+	var currentHeight = parseInt( clientHeight ) + parseInt( scrollTop) + parseInt( newMessageHeight ) + parseInt( lastMessageHeight );
+	
+	if ( currentHeight >= scrollHeight )
 	{
-		messages.scrollTop( scrollHeight );
+		messages.scrollTop = scrollHeight;
 	}
 }
 
@@ -126,7 +136,7 @@ jQuery( '#message-form' ).on( 'submit', function( e )
 */
 var locationButton = document.getElementById( 'send-location' );
 
-locationButton.addEventListener( 'click', function()
+locationButton.onclick = function()
 {
 	if ( ! navigator.geolocation )
 	{
@@ -150,4 +160,4 @@ locationButton.addEventListener( 'click', function()
 	messageInput.focus();
 	locationButton.removeAttribute( 'disabled' );
 	locationButton.innerHTML = 'Send location';
-});
+};
