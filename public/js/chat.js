@@ -72,14 +72,21 @@ socket.on( 'disconnect', function()
 
 socket.on( 'updateUserList', function( users )
 {
-	var ol = jQuery( '<ol></ol>' );
+	// var ol = jQuery( '<ol></ol>' );
+	var ol = document.createElement( 'ol' );
 
 	users.forEach( function( user )
 	{
-		ol.append( jQuery( '<li></li>' ).text( user ) );
+		// ol.append( jQuery( '<li></li>' ).text( user ) );
+		var li = document.createElement( 'li' );
+		li.innerText = user;
+		ol.appendChild( li );
 	});
-
-	jQuery( '#users' ).html( ol );
+	
+	// jQuery( '#users' ).html( ol );
+	var usersDiv = document.getElementById( 'users' );
+	usersDiv.innerHTML = '';
+	usersDiv.append( ol );
 });
 
 var messagesList = document.getElementById( 'messages' );
